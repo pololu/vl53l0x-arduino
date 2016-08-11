@@ -55,6 +55,8 @@ void VL53L0X::setAddress(uint8_t new_addr)
 // (VL53L0X_PerformRefSpadManagement()), since the API user manual says that it
 // is performed by ST on the bare modules; it seems like that should work well
 // enough unless a cover glass is added.
+// If io_2v8 (optional) is true or not given, the sensor is configured for 2V8
+// mode.
 bool VL53L0X::init(bool io_2v8)
 {
   // VL53L0X_DataInit() begin
@@ -358,7 +360,7 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 
 // Write an arbitrary number of bytes from the given array starting at the
 // given register
-void VL53L0X::writeMulti(uint8_t reg, uint8_t * src, uint8_t count)
+void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
 {
   Wire.beginTransmission(address);
   Wire.write(reg);
@@ -391,9 +393,9 @@ void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 // per second). "This represents the amplitude of the signal reflected from the
 // target and detected by the device"; setting this limit presumably determines
 // the minimum measurement necessary for the sensor to report a valid reading.
-// A higher limit increases the potential range of the sensor but also seems to
-// increase the likelihood of getting an inaccurate reading because of unwanted
-// reflections from objects other than the intended target.
+// Setting a lower limit increases the potential range of the sensor but also
+// seems to increase the likelihood of getting an inaccurate reading because of
+// unwanted reflections from objects other than the intended target.
 // Defaults to 0.25 MCPS as initialized by the ST API and this library.
 bool VL53L0X::setSignalRateLimit(float limit_Mcps)
 {
@@ -410,12 +412,12 @@ float VL53L0X::getSignalRateLimit(void)
   return (float)readReg16Bit(FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT) / (1 << 7);
 }
 
-// Set the measurement timing budget in milliseconds, which is the time allowed
+// Set the measurement timing budget in microseconds, which is the time allowed
 // for one measurement; the ST API and this library take care of splitting the
 // timing budget among the sub-steps in the ranging sequence. A longer timing
 // budget allows for more accurate measurements. Increasing the budget by a
 // factor of N decreases the range measurement standard deviation by a factor of
-// sqrt(N). Defaults to about 33 ms; the minimum is 20 ms.
+// sqrt(N). Defaults to about 33 milliseconds; the minimum is 20 ms.
 // based on VL53L0X_set_measurement_timing_budget_micro_seconds()
 bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
 {
@@ -504,7 +506,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
   return true;
 }
 
-// Get the measurement timing budget in milliseconds
+// Get the measurement timing budget in microseconds
 // based on VL53L0X_get_measurement_timing_budget_micro_seconds()
 // in us
 uint32_t VL53L0X::getMeasurementTimingBudget(void)
@@ -558,8 +560,8 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
 // for the given period type (pre-range or final range). Longer pulse periods
 // seem to increase the potential range of the sensor.
 // Valid values are (even numbers only):
-//  pre:  12 to 18
-//  final: 8 to 14
+//  pre:  12 to 18 (initialized default: 14)
+//  final: 8 to 14 (initialized default: 10)
 // based on VL53L0X_set_vcsel_pulse_period()
 bool VL53L0X::setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks)
 {
@@ -930,7 +932,7 @@ void VL53L0X::getSequenceStepEnables(SequenceStepEnables * enables)
 // based on get_sequence_step_timeout(),
 // but gets all timeouts instead of just the requested one, and also stores
 // intermediate values
-void VL53L0X::getSequenceStepTimeouts(SequenceStepEnables * enables, SequenceStepTimeouts * timeouts)
+void VL53L0X::getSequenceStepTimeouts(SequenceStepEnables const * enables, SequenceStepTimeouts * timeouts)
 {
   timeouts->pre_range_vcsel_period_pclks = getVcselPulsePeriod(VcselPeriodPreRange);
 

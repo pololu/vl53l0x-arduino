@@ -110,7 +110,7 @@ class VL53L0X
     uint16_t readReg16Bit(uint8_t reg);
     uint32_t readReg32Bit(uint8_t reg);
 
-    void writeMulti(uint8_t reg, uint8_t * src, uint8_t count);
+    void writeMulti(uint8_t reg, uint8_t const * src, uint8_t count);
     void readMulti(uint8_t reg, uint8_t * dst, uint8_t count);
 
     bool setSignalRateLimit(float limit_Mcps);
@@ -160,7 +160,7 @@ class VL53L0X
     bool getSpadInfo(uint8_t * count, bool * type_is_aperture);
 
     void getSequenceStepEnables(SequenceStepEnables * enables);
-    void getSequenceStepTimeouts(SequenceStepEnables * enables, SequenceStepTimeouts * timeouts);
+    void getSequenceStepTimeouts(SequenceStepEnables const * enables, SequenceStepTimeouts * timeouts);
 
     bool performSingleRefCalibration(uint8_t vhv_init_byte);
 
