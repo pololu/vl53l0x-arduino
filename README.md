@@ -79,6 +79,9 @@ This library is intended to provide a quicker and easier way to get started usin
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
 
+* `uint8_t getAddress(void)`<br>
+  Returns the current I&sup2;C address.
+
 * `bool init(bool io_2v8)`<br>
   Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
 
