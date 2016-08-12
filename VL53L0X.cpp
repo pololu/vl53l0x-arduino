@@ -358,8 +358,8 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
   return value;
 }
 
-// Write an arbitrary number of bytes from the given array starting at the
-// given register
+// Write an arbitrary number of bytes from the given array to the sensor,
+// starting at the given register
 void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
 {
   Wire.beginTransmission(address);
@@ -373,8 +373,8 @@ void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
   last_status = Wire.endTransmission();
 }
 
-// Read an arbitrary number of bytes from the given register into the given
-// array
+// Read an arbitrary number of bytes from the sensor, starting at the given
+// register, into the given array
 void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 {
   Wire.beginTransmission(address);
@@ -436,7 +436,6 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
 
   if (budget_us < MinTimingBudget) { return false; }
 
-  uint32_t final_range_budget_us = budget_us;
   uint32_t used_budget_us = StartOverhead + EndOverhead;
 
   getSequenceStepEnables(&enables);
@@ -556,9 +555,9 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
   return budget_us;
 }
 
-// Set the VCSEL (vertical cavity surface emitting laser) pulse period in PCLKs
-// for the given period type (pre-range or final range). Longer pulse periods
-// seem to increase the potential range of the sensor.
+// Set the VCSEL (vertical cavity surface emitting laser) pulse period for the
+// given period type (pre-range or final range) to the given value in PCLKs.
+// Longer periods seem to increase the potential range of the sensor.
 // Valid values are (even numbers only):
 //  pre:  12 to 18 (initialized default: 14)
 //  final: 8 to 14 (initialized default: 10)
