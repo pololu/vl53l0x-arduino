@@ -82,10 +82,10 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t getAddress(void)`<br>
   Returns the current I&sup2;C address.
 
-* `bool init(bool io_2v8)`<br>
+* `bool init(bool io_2v8 = true)`<br>
   Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
 
-* `void writeReg(uint8_t reg, uint8_t value`<br>
+* `void writeReg(uint8_t reg, uint8_t value)`<br>
   Writes an 8-bit sensor register with the given value.
 
   Register address constants are defined by the regAddr enumeration type in VL53L0X.h.<br>
@@ -109,7 +109,7 @@ This library is intended to provide a quicker and easier way to get started usin
 * `void writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)`<br>
   Writes an arbitrary number of bytes from the given array to the sensor, starting at the given register.
 
-* `void readMulti(uint8_t reg, uint8_t dst, uint8_t count)`<br>
+* `void readMulti(uint8_t reg, uint8_t * dst, uint8_t count)`<br>
   Reads an arbitrary number of bytes from the sensor, starting at the given register, into the given array.
 
 * `bool setSignalRateLimit(float limit_Mcps)`<br>
@@ -135,7 +135,7 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t getVcselPulsePeriod(vcselPeriodType type)`<br>
   Returns the current VCSEL pulse period for the given period type.
 
-* `void startContinuous(uint32_t period_ms)`<br>
+* `void startContinuous(uint32_t period_ms = 0)`<br>
   Starts continuous ranging measurements. If the optional argument `period_ms` is 0 (the default if not specified), continuous back-to-back mode is used (the sensor takes measurements as often as possible); if it is nonzero, continuous timed mode is used, with the specified inter-measurement period in milliseconds determining how often the sensor takes a measurement.
 
 * `void stopContinuous(void)`<br>
