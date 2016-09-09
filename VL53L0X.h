@@ -96,7 +96,7 @@ class VL53L0X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL53L0X(void);
+    VL53L0X(std::shared_ptr<I2C>, std::shared_ptr<Timer>);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
@@ -168,6 +168,10 @@ class VL53L0X
     static uint16_t encodeTimeout(uint16_t timeout_mclks);
     static uint32_t timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks);
     static uint32_t timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t vcsel_period_pclks);
+
+    // mbed members
+    std::shared_ptr<I2C> i2c;
+    std::shared_ptr<Timer> timer;
 };
 
 #endif

@@ -3,8 +3,8 @@
 // or paraphrased from the API source code, API user manual (UM2039), and the
 // VL53L0X datasheet.
 
+#include <memory>
 #include <VL53L0X.h>
-#include <Wire.h>
 
 // Defines /////////////////////////////////////////////////////////////////////
 
@@ -34,10 +34,12 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL53L0X::VL53L0X(void)
+VL53L0X::VL53L0X(std::shared_ptr<I2C> i2c, std::shared_ptr<Timer> timer)
   : address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
+  , i2c(i2c)
+  , timer(timer)
 {
 }
 
