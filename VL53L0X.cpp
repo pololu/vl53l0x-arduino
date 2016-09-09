@@ -377,7 +377,7 @@ uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 // Read a 32-bit register
 uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 {
-  uint16_t value;
+  uint32_t value;
   uint8_t data[4];
 
   if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
