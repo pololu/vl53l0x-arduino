@@ -21,22 +21,9 @@ A [VL53L0X carrier](https://www.pololu.com/product/2490) can be purchased from P
 
 Make the following connections between the Arduino and the VL53L0X board:
 
-#### 5V Arduino boards
+#### mbed boards
 
-(including Arduino Uno, Leonardo, Mega; Pololu A-Star 32U4)
-
-    Arduino   VL53L0X board
-    -------   -------------
-         5V - VIN
-        GND - GND
-        SDA - SDA
-        SCL - SCL
-
-#### 3.3V Arduino boards
-
-(including Arduino Due)
-
-    Arduino   VL53L0X board
+    mbed      VL53L0X board
     -------   -------------
         3V3 - VIN
         GND - GND
