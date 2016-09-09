@@ -42,7 +42,7 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL53L0X::VL53L0X(std::shared_ptr<I2C> i2c, std::shared_ptr<Timer> timer)
+VL53L0X::VL53L0X(I2C* i2c, Timer* timer)
   : address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
