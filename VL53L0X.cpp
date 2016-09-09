@@ -38,6 +38,8 @@
 #define ERR_NACK_DATA 3 // received NACK on transmit of data
 #define ERR_OTHER 4
 
+#define millis() timer->read_ms()
+
 // Constructors ////////////////////////////////////////////////////////////////
 
 VL53L0X::VL53L0X(std::shared_ptr<I2C> i2c, std::shared_ptr<Timer> timer)
