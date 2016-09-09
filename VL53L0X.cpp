@@ -32,6 +32,12 @@
 // PLL_period_ps = 1655; macro_period_vclks = 2304
 #define calcMacroPeriod(vcsel_period_pclks) ((((uint32_t)2304 * (vcsel_period_pclks) * 1655) + 500) / 1000)
 
+// Transmission status (https://www.arduino.cc/en/Reference/WireEndTransmission)
+#define ERR_OK 0
+#define ERR_NACK_ADDR 2 // received NACK on transmit of address
+#define ERR_NACK_DATA 3 // received NACK on transmit of data
+#define ERR_OTHER 4
+
 // Constructors ////////////////////////////////////////////////////////////////
 
 VL53L0X::VL53L0X(std::shared_ptr<I2C> i2c, std::shared_ptr<Timer> timer)
