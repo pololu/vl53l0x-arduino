@@ -308,7 +308,7 @@ void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
   char data[] = {
     reg,
     static_cast<char>((value >> 8) & 0xFF), // value high byte
-    static_cast<char>(value        & 0xFF)   // value low byte
+    static_cast<char>(value        & 0xFF)  // value low byte
   };
   if (i2c->write(address, data, 3)) {
     last_status = ERR_OTHER;
@@ -325,7 +325,7 @@ void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
     static_cast<char>((value >> 24) & 0xFF), // value highest byte
     static_cast<char>((value >> 16) & 0xFF),
     static_cast<char>((value >>  8) & 0xFF),
-    static_cast<char>(value         & 0xFF)   // value lowest byte
+    static_cast<char>(value         & 0xFF)  // value lowest byte
   };
   if (i2c->write(address, data, 3)) {
     last_status = ERR_OTHER;
