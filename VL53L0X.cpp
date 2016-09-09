@@ -327,7 +327,7 @@ void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
     static_cast<char>((value >>  8) & 0xFF),
     static_cast<char>(value         & 0xFF)  // value lowest byte
   };
-  if (i2c->write(address, data, 3)) {
+  if (i2c->write(address, data, 5)) {
     last_status = ERR_OTHER;
   } else {
     last_status = ERR_OK;
