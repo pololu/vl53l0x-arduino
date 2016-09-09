@@ -138,7 +138,7 @@ class VL53L0X
 
     struct SequenceStepEnables
     {
-      boolean tcc, msrc, dss, pre_range, final_range;
+      bool tcc, msrc, dss, pre_range, final_range;
     };
 
     struct SequenceStepTimeouts
