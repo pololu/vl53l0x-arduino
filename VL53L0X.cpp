@@ -10,7 +10,7 @@
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
 // and sets the last bit correctly based on reads and writes
-#define ADDRESS_DEFAULT 0b0101001
+#define ADDRESS_DEFAULT (0b0101001 << 1)
 
 // Record the current time to check an upcoming timeout against
 #define startTimeout() (timeout_start_ms = millis())
@@ -56,7 +56,7 @@ VL53L0X::VL53L0X(I2C* i2c, Timer* timer)
 void VL53L0X::setAddress(uint8_t new_addr)
 {
   writeReg(I2C_SLAVE_DEVICE_ADDRESS, new_addr & 0x7F);
-  address = new_addr;
+  address = new_addr << 1;
 }
 
 // Initialize sensor using sequence based on VL53L0X_DataInit(),
