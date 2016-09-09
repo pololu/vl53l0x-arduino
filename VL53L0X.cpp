@@ -339,11 +339,11 @@ uint8_t VL53L0X::readReg(uint8_t reg)
 {
   uint8_t value;
 
-  if (i2c->write(address, (char *) &reg, 1)) {
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
     last_status = ERR_NACK_ADDR;
     return 0;
   }
-  if (i2c->read(address, (char *) &value, 1)) {
+  if (i2c->read(address, reinterpret_cast<char *>(&value), 1)) {
     last_status = ERR_NACK_DATA;
     return 0;
   }
