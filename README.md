@@ -53,7 +53,7 @@ e.g. [53L0-SATEL-I1](http://www.st.com/content/st_com/en/products/evaluation-too
 Use [`mbed-cli`](https://github.com/ARMmbed/mbed-cli) to install this library.
 
 ```
-mbed add dbaba/vl53l0x-mbedos
+mbed add https://github.com/dbaba/vl53l0x-mbedos
 ```
 
 ## ST's VL53L0X API and this library
