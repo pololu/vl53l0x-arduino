@@ -3,14 +3,14 @@
 // or paraphrased from the API source code, API user manual (UM2039), and the
 // VL53L0X datasheet.
 
+#include <memory>
 #include <VL53L0X.h>
-#include <Wire.h>
 
 // Defines /////////////////////////////////////////////////////////////////////
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
 // and sets the last bit correctly based on reads and writes
-#define ADDRESS_DEFAULT 0b0101001
+#define ADDRESS_DEFAULT (0b0101001 << 1)
 
 // Record the current time to check an upcoming timeout against
 #define startTimeout() (timeout_start_ms = millis())
@@ -32,12 +32,22 @@
 // PLL_period_ps = 1655; macro_period_vclks = 2304
 #define calcMacroPeriod(vcsel_period_pclks) ((((uint32_t)2304 * (vcsel_period_pclks) * 1655) + 500) / 1000)
 
+// Transmission status (https://www.arduino.cc/en/Reference/WireEndTransmission)
+#define ERR_OK 0
+#define ERR_NACK_ADDR 2 // received NACK on transmit of address
+#define ERR_NACK_DATA 3 // received NACK on transmit of data
+#define ERR_OTHER 4
+
+#define millis() timer->read_ms()
+
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL53L0X::VL53L0X(void)
+VL53L0X::VL53L0X(I2C* i2c, Timer* timer)
   : address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
+  , i2c(i2c)
+  , timer(timer)
 {
 }
 
@@ -46,7 +56,7 @@ VL53L0X::VL53L0X(void)
 void VL53L0X::setAddress(uint8_t new_addr)
 {
   writeReg(I2C_SLAVE_DEVICE_ADDRESS, new_addr & 0x7F);
-  address = new_addr;
+  address = new_addr << 1;
 }
 
 // Initialize sensor using sequence based on VL53L0X_DataInit(),
@@ -281,32 +291,47 @@ bool VL53L0X::init(bool io_2v8)
 // Write an 8-bit register
 void VL53L0X::writeReg(uint8_t reg, uint8_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write(value);
-  last_status = Wire.endTransmission();
+  char data[] = {
+    reg,
+    value
+  };
+  if (i2c->write(address, data, 2)) {
+    last_status = ERR_OTHER;
+  } else {
+    last_status = ERR_OK;
+  }
 }
 
 // Write a 16-bit register
 void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write((value >> 8) & 0xFF); // value high byte
-  Wire.write( value       & 0xFF); // value low byte
-  last_status = Wire.endTransmission();
+  char data[] = {
+    reg,
+    static_cast<char>((value >> 8) & 0xFF), // value high byte
+    static_cast<char>(value        & 0xFF)  // value low byte
+  };
+  if (i2c->write(address, data, 3)) {
+    last_status = ERR_OTHER;
+  } else {
+    last_status = ERR_OK;
+  }
 }
 
 // Write a 32-bit register
 void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write((value >> 24) & 0xFF); // value highest byte
-  Wire.write((value >> 16) & 0xFF);
-  Wire.write((value >>  8) & 0xFF);
-  Wire.write( value        & 0xFF); // value lowest byte
-  last_status = Wire.endTransmission();
+  char data[] = {
+    reg,
+    static_cast<char>((value >> 24) & 0xFF), // value highest byte
+    static_cast<char>((value >> 16) & 0xFF),
+    static_cast<char>((value >>  8) & 0xFF),
+    static_cast<char>(value         & 0xFF)  // value lowest byte
+  };
+  if (i2c->write(address, data, 5)) {
+    last_status = ERR_OTHER;
+  } else {
+    last_status = ERR_OK;
+  }
 }
 
 // Read an 8-bit register
@@ -314,12 +339,15 @@ uint8_t VL53L0X::readReg(uint8_t reg)
 {
   uint8_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
-
-  Wire.requestFrom(address, (uint8_t)1);
-  value = Wire.read();
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
+    last_status = ERR_NACK_ADDR;
+    return 0;
+  }
+  if (i2c->read(address, reinterpret_cast<char *>(&value), 1)) {
+    last_status = ERR_NACK_DATA;
+    return 0;
+  }
+  last_status = ERR_OK;
 
   return value;
 }
@@ -328,14 +356,20 @@ uint8_t VL53L0X::readReg(uint8_t reg)
 uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 {
   uint16_t value;
+  uint8_t data[2];
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
+    last_status = ERR_NACK_ADDR;
+    return 0;
+  }
+  if (i2c->read(address, reinterpret_cast<char *>(data), 2)) {
+    last_status = ERR_NACK_DATA;
+    return 0;
+  }
+  last_status = ERR_OK;
 
-  Wire.requestFrom(address, (uint8_t)2);
-  value  = (uint16_t)Wire.read() << 8; // value high byte
-  value |=           Wire.read();      // value low byte
+  value  = static_cast<uint16_t>(data[0] << 8); // value high byte
+  value |=                       data[1];       // value low byte
 
   return value;
 }
@@ -343,17 +377,23 @@ uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 // Read a 32-bit register
 uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 {
-  uint16_t value;
+  uint32_t value;
+  uint8_t data[4];
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
+    last_status = ERR_NACK_ADDR;
+    return 0;
+  }
+  if (i2c->read(address, reinterpret_cast<char *>(data), 4)) {
+    last_status = ERR_NACK_DATA;
+    return 0;
+  }
+  last_status = ERR_OK;
 
-  Wire.requestFrom(address, (uint8_t)4);
-  value  = (uint32_t)Wire.read() << 24; // value highest byte
-  value |= (uint32_t)Wire.read() << 16;
-  value |= (uint16_t)Wire.read() <<  8;
-  value |=           Wire.read();       // value lowest byte
+  value  = static_cast<uint32_t>(data[0] << 24); // value highest byte
+  value |= static_cast<uint32_t>(data[1] << 16);
+  value |= static_cast<uint32_t>(data[2] <<  8);
+  value |=                       data[3];       // value lowest byte
 
   return value;
 }
@@ -362,31 +402,32 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 // starting at the given register
 void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-
-  while (count-- > 0)
-  {
-    Wire.write(*(src++));
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1, true)) {
+    last_status = ERR_NACK_ADDR;
+    return;
   }
 
-  last_status = Wire.endTransmission();
+  if (i2c->write(address, const_cast<char *>(
+      reinterpret_cast<const char *>(src)), count)) {
+    last_status = ERR_NACK_DATA;
+    return;
+  }
+  last_status = ERR_OK;
 }
 
 // Read an arbitrary number of bytes from the sensor, starting at the given
 // register, into the given array
 void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
-
-  Wire.requestFrom(address, count);
-
-  while (count-- > 0)
-  {
-    *(dst++) = Wire.read();
+  if (i2c->write(address, reinterpret_cast<char *>(&reg), 1)) {
+    last_status = ERR_NACK_ADDR;
+    return;
   }
+  if (i2c->read(address, reinterpret_cast<char *>(dst), count)) {
+    last_status = ERR_NACK_DATA;
+    return;
+  }
+  last_status = ERR_OK;
 }
 
 // Set the return signal rate limit check value in units of MCPS (mega counts

@@ -1,7 +1,7 @@
 #ifndef VL53L0X_h
 #define VL53L0X_h
 
-#include <Arduino.h>
+#include <mbed.h>
 
 class VL53L0X
 {
@@ -96,7 +96,7 @@ class VL53L0X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL53L0X(void);
+    VL53L0X(I2C*, Timer*);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
@@ -138,7 +138,7 @@ class VL53L0X
 
     struct SequenceStepEnables
     {
-      boolean tcc, msrc, dss, pre_range, final_range;
+      bool tcc, msrc, dss, pre_range, final_range;
     };
 
     struct SequenceStepTimeouts
@@ -168,9 +168,10 @@ class VL53L0X
     static uint16_t encodeTimeout(uint16_t timeout_mclks);
     static uint32_t timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks);
     static uint32_t timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t vcsel_period_pclks);
+
+    // mbed members
+    I2C* i2c;
+    Timer* timer;
 };
 
 #endif
-
-
-
