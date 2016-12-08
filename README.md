@@ -1,7 +1,7 @@
 # VL53L0X library for Arduino
 
-Version: 1.0.0<br>
-Release date: 2016 Aug 12<br>
+Version: 1.0.1<br>
+Release date: 2016 Dec 08<br>
 [![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -159,4 +159,5 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
+* 1.0.1 (2016 Dec 08): Fixed type error in `readReg32Bit()`.
 * 1.0.0 (2016 Aug 12): Original release.
