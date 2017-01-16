@@ -142,7 +142,7 @@ This library is intended to provide a quicker and easier way to get started usin
 * `void stopContinuous(void)`<br>
   Stops continuous mode.
 
-* `uint8_t readRangeContinuousMillimeters(void)`<br>
+* `uint16_t readRangeContinuousMillimeters(void)`<br>
   Returns a range reading in millimeters when continuous mode is active.
 
 * `uint16_t readRangeSingleMillimeters(void)`<br>
