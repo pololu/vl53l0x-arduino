@@ -6,6 +6,7 @@
 #include <VL53L0X.h>
 #include <Wire.h>
 
+
 // Defines /////////////////////////////////////////////////////////////////////
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
@@ -39,6 +40,18 @@ VL53L0X::VL53L0X(void)
   , io_timeout(0) // no timeout
   , did_timeout(false)
 {
+}
+
+void VL53L0X::begin()
+{
+	_serial = &Wire;
+
+}
+
+void VL53L0X::begin(TwoWire *theSerial)
+{
+	_serial = theSerial;
+	
 }
 
 // Public Methods //////////////////////////////////////////////////////////////
@@ -281,32 +294,32 @@ bool VL53L0X::init(bool io_2v8)
 // Write an 8-bit register
 void VL53L0X::writeReg(uint8_t reg, uint8_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write(value);
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  _serial -> write(value);
+  last_status = _serial -> endTransmission();
 }
 
 // Write a 16-bit register
 void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write((value >> 8) & 0xFF); // value high byte
-  Wire.write( value       & 0xFF); // value low byte
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  _serial -> write((value >> 8) & 0xFF); // value high byte
+  _serial -> write( value       & 0xFF); // value low byte
+  last_status = _serial -> endTransmission();
 }
 
 // Write a 32-bit register
 void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write((value >> 24) & 0xFF); // value highest byte
-  Wire.write((value >> 16) & 0xFF);
-  Wire.write((value >>  8) & 0xFF);
-  Wire.write( value        & 0xFF); // value lowest byte
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  _serial -> write((value >> 24) & 0xFF); // value highest byte
+  _serial -> write((value >> 16) & 0xFF);
+  _serial -> write((value >>  8) & 0xFF);
+  _serial -> write( value        & 0xFF); // value lowest byte
+  last_status = _serial -> endTransmission();
 }
 
 // Read an 8-bit register
@@ -314,12 +327,12 @@ uint8_t VL53L0X::readReg(uint8_t reg)
 {
   uint8_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  last_status = _serial -> endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)1);
-  value = Wire.read();
+  _serial -> requestFrom(address, (uint8_t)1);
+  value = _serial -> read();
 
   return value;
 }
@@ -329,13 +342,13 @@ uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 {
   uint16_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  last_status = _serial -> endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)2);
-  value  = (uint16_t)Wire.read() << 8; // value high byte
-  value |=           Wire.read();      // value low byte
+  _serial -> requestFrom(address, (uint8_t)2);
+  value  = (uint16_t) _serial -> read() << 8; // value high byte
+  value |=            _serial -> read();      // value low byte
 
   return value;
 }
@@ -345,15 +358,15 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 {
   uint32_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  last_status = _serial -> endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)4);
-  value  = (uint32_t)Wire.read() << 24; // value highest byte
-  value |= (uint32_t)Wire.read() << 16;
-  value |= (uint16_t)Wire.read() <<  8;
-  value |=           Wire.read();       // value lowest byte
+  _serial -> requestFrom(address, (uint8_t)4);
+  value  = (uint32_t)_serial -> read() << 24; // value highest byte
+  value |= (uint32_t)_serial -> read() << 16;
+  value |= (uint16_t)_serial -> read() <<  8;
+  value |=           _serial -> read();       // value lowest byte
 
   return value;
 }
@@ -362,30 +375,30 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 // starting at the given register
 void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
 
   while (count-- > 0)
   {
-    Wire.write(*(src++));
+    _serial -> write(*(src++));
   }
 
-  last_status = Wire.endTransmission();
+  last_status = _serial -> endTransmission();
 }
 
 // Read an arbitrary number of bytes from the sensor, starting at the given
 // register, into the given array
 void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  last_status = Wire.endTransmission();
+  _serial -> beginTransmission(address);
+  _serial -> write(reg);
+  last_status = _serial -> endTransmission();
 
-  Wire.requestFrom(address, count);
+  _serial -> requestFrom(address, count);
 
   while (count-- > 0)
   {
-    *(dst++) = Wire.read();
+    *(dst++) = _serial -> read();
   }
 }
 

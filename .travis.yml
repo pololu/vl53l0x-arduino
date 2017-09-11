@@ -10,15 +10,12 @@ install:
 env:
 - BOARD=uno
 - BOARD=leonardo
-- BOARD=micro
 - BOARD=megaatmega2560
 - BOARD=due
-- BOARD=yun
 - BOARD=genuino101
 - BOARD=zero
 
 script:
-- set -eo pipefail;
-  for e in examples/*; do
-    platformio ci --board=$BOARD --lib=. $e/*;
+- for e in $(find examples -name \*.ino); do
+    platformio ci --board=$BOARD --lib=. $e;
   done
