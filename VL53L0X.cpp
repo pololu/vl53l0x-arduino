@@ -45,13 +45,14 @@ VL53L0X::VL53L0X(void)
 void VL53L0X::begin()
 {
 	wire = &Wire;
+	wire -> begin();
 
 }
 
 void VL53L0X::begin(TwoWire *theWire)
 {
 	wire = theWire;
-	
+	wire -> begin();
 }
 
 // Public Methods //////////////////////////////////////////////////////////////

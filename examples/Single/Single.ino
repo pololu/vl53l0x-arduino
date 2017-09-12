@@ -34,7 +34,7 @@ VL53L0X sensor;
 void setup()
 {
   Serial.begin(9600);
-  Wire.begin();
+
 
   sensor.begin();   // to change wire port use sensor.begin(&Wire1) for example
   sensor.init();
