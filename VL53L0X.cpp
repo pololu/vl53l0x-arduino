@@ -6,7 +6,6 @@
 #include <VL53L0X.h>
 #include <Wire.h>
 
-
 // Defines /////////////////////////////////////////////////////////////////////
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
@@ -44,15 +43,14 @@ VL53L0X::VL53L0X(void)
 
 void VL53L0X::begin()
 {
-	wire = &Wire;
-	wire -> begin();
-
+  wire = &Wire;
+  wire -> begin();
 }
 
-void VL53L0X::begin(TwoWire *theWire)
+void VL53L0X::begin(TwoWire &theWire)
 {
-	wire = theWire;
-	wire -> begin();
+  wire = &theWire;
+  wire -> begin();
 }
 
 // Public Methods //////////////////////////////////////////////////////////////

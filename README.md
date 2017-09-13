@@ -1,7 +1,7 @@
 # VL53L0X library for Arduino
 
-Version: 1.0.1<br>
-Release date: 2016 Dec 08<br>
+Version: 1.0.2<br>
+Release date: 2017 Jun 27<br>
 [![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -84,12 +84,12 @@ This library is intended to provide a quicker and easier way to get started usin
   Returns the current I&sup2;C address.
 
 * `bool begin(void)`<br>
-  Iniitializes the sensor to use Wire as the default port. 
+  Initializes the sensor to use Wire as the default port. 
 * `bool begin(&Wire1)`<br>
-  Iniitializes the sensor to use Wire1 as the default port or change Wire1 to Wire2, Wire3 etc.
+  Initializes the two wire interface to something other than the default Wire1 (for example, Wire2 or Wire3).
 
 * `bool init(bool io_2v8 = true)`<br>
-  Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
+  Initializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
 
 * `void writeReg(uint8_t reg, uint8_t value)`<br>
   Writes an 8-bit sensor register with the given value.
@@ -163,6 +163,6 @@ This library is intended to provide a quicker and easier way to get started usin
   Indicates whether a read timeout has occurred since the last call to `timeoutOccurred()`.
 
 ## Version history
-
+1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
 * 1.0.1 (2016 Dec 08): Fixed type error in `readReg32Bit()`.
 * 1.0.0 (2016 Aug 12): Original release.

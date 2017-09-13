@@ -100,8 +100,8 @@ class VL53L0X
 
     VL53L0X(void);
 	
-	void begin();
-	void begin(TwoWire *theWire);
+    void begin();
+    void begin(TwoWire &theWire);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
@@ -137,8 +137,6 @@ class VL53L0X
     bool timeoutOccurred(void);
 
   private:
-	TwoWire *wire;
-  
     // TCC: Target CentreCheck
     // MSRC: Minimum Signal Rate Check
     // DSS: Dynamic Spad Selection
@@ -156,6 +154,7 @@ class VL53L0X
       uint32_t msrc_dss_tcc_us,    pre_range_us,    final_range_us;
     };
 
+    TwoWire *wire;
     uint8_t address;
     uint16_t io_timeout;
     bool did_timeout;
