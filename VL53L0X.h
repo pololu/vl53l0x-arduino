@@ -100,13 +100,15 @@ class VL53L0X
 
     VL53L0X(void);
 	
-    void begin();
-    void begin(TwoWire &theWire);
+    bool init(void);
+    bool init(TwoWire &theWire);
+	bool init(bool io_2v8);
+	bool init(bool io_2v8, TwoWire &theWire);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
 
-    bool init(bool io_2v8 = true);
+    bool begin(bool io_2v8);
 
     void writeReg(uint8_t reg, uint8_t value);
     void writeReg16Bit(uint8_t reg, uint16_t value);

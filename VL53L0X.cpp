@@ -41,16 +41,32 @@ VL53L0X::VL53L0X(void)
 {
 }
 
-void VL53L0X::begin()
+bool VL53L0X::init(void)
 {
   wire = &Wire;
   wire -> begin();
+  return begin(true);
 }
 
-void VL53L0X::begin(TwoWire &theWire)
+bool VL53L0X::init(TwoWire &theWire)
 {
   wire = &theWire;
   wire -> begin();
+  return begin(true);
+}
+
+bool VL53L0X::init(bool io_2v8)
+{
+  wire = &Wire;
+  wire -> begin();
+  return begin(io_2v8);
+}
+
+bool VL53L0X::init(bool io_2v8, TwoWire &theWire)
+{
+  wire = &theWire;
+  wire -> begin();
+  return begin(io_2v8);
 }
 
 // Public Methods //////////////////////////////////////////////////////////////
@@ -69,7 +85,7 @@ void VL53L0X::setAddress(uint8_t new_addr)
 // enough unless a cover glass is added.
 // If io_2v8 (optional) is true or not given, the sensor is configured for 2V8
 // mode.
-bool VL53L0X::init(bool io_2v8)
+bool VL53L0X::begin(bool io_2v8)
 {
   // VL53L0X_DataInit() begin
 

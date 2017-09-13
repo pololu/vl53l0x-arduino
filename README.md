@@ -82,14 +82,18 @@ This library is intended to provide a quicker and easier way to get started usin
 
 * `uint8_t getAddress(void)`<br>
   Returns the current I&sup2;C address.
+  
+* `bool init()`<br>
+  Initializes and configures the sensor. If no arguments are specified uses defaults settings of io_2v8 = ture, and I2C set to use Wire. The return value is a boolean indicating whether the initialization completed successfully.
 
-* `bool begin(void)`<br>
-  Initializes the sensor to use Wire as the default port. 
-* `bool begin(&Wire1)`<br>
-  Initializes the two wire interface to something other than the default Wire1 (for example, Wire2 or Wire3).
+* `bool init(Wire)`<br>
+  Initializes the two wire interface to something other than the default Wire1 (for example, Wire2 or Wire3) and defaults to io_2v8 = true. The return value is a boolean indicating whether the initialization completed successfully.
 
-* `bool init(bool io_2v8 = true)`<br>
-  Initializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
+* `bool init(bool io_2v8)`<br>
+  If the argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. Defaults the two wire interface to Wire.
+
+* `bool init(bool io_2v8, Wire)`<br>
+  If the argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. Initializes the two wire interface to something other than the default Wire1 (for example, Wire2 or Wire3).
 
 * `void writeReg(uint8_t reg, uint8_t value)`<br>
   Writes an 8-bit sensor register with the given value.
@@ -163,6 +167,7 @@ This library is intended to provide a quicker and easier way to get started usin
   Indicates whether a read timeout has occurred since the last call to `timeoutOccurred()`.
 
 ## Version history
-1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
+
+* 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
 * 1.0.1 (2016 Dec 08): Fixed type error in `readReg32Bit()`.
 * 1.0.0 (2016 Aug 12): Original release.
