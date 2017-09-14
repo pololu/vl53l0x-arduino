@@ -102,8 +102,8 @@ class VL53L0X
 	
     bool init(void);
     bool init(TwoWire &theWire);
-	bool init(bool io_2v8);
-	bool init(bool io_2v8, TwoWire &theWire);
+    bool init(bool io_2v8);
+    bool init(bool io_2v8, TwoWire &theWire);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }

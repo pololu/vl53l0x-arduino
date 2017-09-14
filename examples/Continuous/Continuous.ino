@@ -13,8 +13,7 @@ void setup()
 {
   Serial.begin(9600);
 
-  sensor.begin();   // to change wire port use sensor.begin(&Wire1) for example
-  sensor.init();
+  sensor.init();   // to change wire port use sensor.begin(Wire1) for example
   sensor.setTimeout(500);
 
   // Start continuous back-to-back mode (take readings as
