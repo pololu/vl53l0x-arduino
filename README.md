@@ -84,10 +84,10 @@ This library is intended to provide a quicker and easier way to get started usin
   Returns the current I&sup2;C address.
   
 * `bool init()`<br>
-  Initializes and configures the sensor. If no arguments are specified uses defaults settings of io_2v8 = ture, and I2C set to use Wire. The return value is a boolean indicating whether the initialization completed successfully.
+  Initializes and configures the sensor. If no arguments are specified uses defaults settings of io_2v8 = true, and I2C set to use Wire. The return value is a boolean indicating whether the initialization completed successfully.
 
 * `bool init(Wire)`<br>
-  Initializes the two wire interface to something other than the default Wire1 (for example, Wire2 or Wire3) and defaults to io_2v8 = true. The return value is a boolean indicating whether the initialization completed successfully.
+  Initializes the two wire interface to something other than the default Wire (for example, Wire1, Wire2 or Wire3) and defaults to io_2v8 = true. The return value is a boolean indicating whether the initialization completed successfully.
 
 * `bool init(bool io_2v8)`<br>
   If the argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. Defaults the two wire interface to Wire.
