@@ -41,6 +41,13 @@ VL53L0X::VL53L0X(void)
 {
 }
 
+VL53L0X::VL53L0X(const uint8_t new_addr)
+  : address(new_addr)
+  , io_timeout(0) // no timeout
+  , did_timeout(false)
+{
+}
+
 // Public Methods //////////////////////////////////////////////////////////////
 
 void VL53L0X::setAddress(uint8_t new_addr)

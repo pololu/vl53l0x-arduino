@@ -77,6 +77,9 @@ This library is intended to provide a quicker and easier way to get started usin
 * `VL53L0X(void)`<br>
   Constructor.
 
+* `VL53L0X(const uint8_t new_addr)`<br>
+  Constructor for sensor with already changed I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
+
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
 
