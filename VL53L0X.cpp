@@ -16,7 +16,7 @@
 #define startTimeout() (timeout_start_ms = millis())
 
 // Check if timeout is enabled (set to nonzero value) and has expired
-#define checkTimeoutExpired() (io_timeout > 0 && ((uint16_t)millis() - timeout_start_ms) > io_timeout)
+#define checkTimeoutExpired() (io_timeout > 0 && (millis() - timeout_start_ms) > io_timeout)
 
 // Decode VCSEL (vertical cavity surface emitting laser) pulse period in PCLKs
 // from register value
