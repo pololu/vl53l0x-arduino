@@ -165,7 +165,7 @@ class VL53L0X
     bool performSingleRefCalibration(uint8_t vhv_init_byte);
 
     static uint16_t decodeTimeout(uint16_t value);
-    static uint16_t encodeTimeout(uint16_t timeout_mclks);
+    static uint16_t encodeTimeout(uint32_t timeout_mclks);
     static uint32_t timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks);
     static uint32_t timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t vcsel_period_pclks);
 };

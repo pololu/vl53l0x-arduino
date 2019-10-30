@@ -427,7 +427,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
   SequenceStepEnables enables;
   SequenceStepTimeouts timeouts;
 
-  uint16_t const StartOverhead      = 1320; // note that this is different than the value in get_
+  uint16_t const StartOverhead     = 1910;
   uint16_t const EndOverhead        = 960;
   uint16_t const MsrcOverhead       = 660;
   uint16_t const TccOverhead        = 590;
@@ -489,7 +489,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
     //  timeouts must be expressed in macro periods MClks
     //  because they have different vcsel periods."
 
-    uint16_t final_range_timeout_mclks =
+    uint32_t final_range_timeout_mclks =
       timeoutMicrosecondsToMclks(final_range_timeout_us,
                                  timeouts.final_range_vcsel_period_pclks);
 
@@ -516,7 +516,7 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
   SequenceStepEnables enables;
   SequenceStepTimeouts timeouts;
 
-  uint16_t const StartOverhead     = 1910; // note that this is different than the value in set_
+  uint16_t const StartOverhead     = 1910;
   uint16_t const EndOverhead        = 960;
   uint16_t const MsrcOverhead       = 660;
   uint16_t const TccOverhead        = 590;
@@ -977,9 +977,7 @@ uint16_t VL53L0X::decodeTimeout(uint16_t reg_val)
 
 // Encode sequence step timeout register value from timeout in MCLKs
 // based on VL53L0X_encode_timeout()
-// Note: the original function took a uint16_t, but the argument passed to it
-// is always a uint16_t.
-uint16_t VL53L0X::encodeTimeout(uint16_t timeout_mclks)
+uint16_t VL53L0X::encodeTimeout(uint32_t timeout_mclks)
 {
   // format: "(LSByte * 2^MSByte) + 1"
 
@@ -1007,7 +1005,7 @@ uint32_t VL53L0X::timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint
 {
   uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
 
-  return ((timeout_period_mclks * macro_period_ns) + (macro_period_ns / 2)) / 1000;
+  return ((timeout_period_mclks * macro_period_ns) + 500) / 1000;
 }
 
 // Convert sequence step timeout from microseconds to MCLKs with given VCSEL period in PCLKs
