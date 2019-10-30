@@ -36,8 +36,12 @@ void setup()
   Serial.begin(9600);
   Wire.begin();
 
-  sensor.init();
   sensor.setTimeout(500);
+  if (!sensor.init())
+  {
+    Serial.println("Failed to detect and initialize sensor!");
+    while (1) {}
+  }
 
 #if defined LONG_RANGE
   // lower the return signal rate limit (default is 0.25 MCPS)

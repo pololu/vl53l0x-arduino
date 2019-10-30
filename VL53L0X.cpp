@@ -59,6 +59,9 @@ void VL53L0X::setAddress(uint8_t new_addr)
 // mode.
 bool VL53L0X::init(bool io_2v8)
 {
+  // check model ID register (value specified in datasheet)
+  if (readReg(IDENTIFICATION_MODEL_ID) != 0xEE) { return false; }
+
   // VL53L0X_DataInit() begin
 
   // sensor uses 1V8 mode for I/O by default; switch to 2V8 mode if necessary

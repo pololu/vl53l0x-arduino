@@ -14,8 +14,12 @@ void setup()
   Serial.begin(9600);
   Wire.begin();
 
-  sensor.init();
   sensor.setTimeout(500);
+  if (!sensor.init())
+  {
+    Serial.println("Failed to detect and initialize sensor!");
+    while (1) {}
+  }
 
   // Start continuous back-to-back mode (take readings as
   // fast as possible).  To use continuous timed mode
