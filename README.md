@@ -1,7 +1,7 @@
 # VL53L0X library for Arduino
 
-Version: 1.1.0<br>
-Release date: 2019 Oct 29<br>
+Version: 1.2.0<br>
+Release date: 2019 Oct 31<br>
 [![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -159,6 +159,7 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
+* 1.2.0 (2019 Oct 31): Incorporated some updates from ST's VL53L0X API version 1.0.2 (this library was originally based on API version 1.0.0).
 * 1.1.0 (2019 Oct 29): Improved `init()` and added a check for its return value in examples; fixed a few other issues.
 * 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
 * 1.0.1 (2016 Dec 08): Fixed type error in `readReg32Bit()`.
