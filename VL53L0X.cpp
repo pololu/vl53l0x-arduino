@@ -242,7 +242,6 @@ bool VL53L0X::init(int16_t GPIO0_pin, TwoWire &theWire, bool io_2v8)
   // -- VL53L0X_SetGpioConfig() begin
 
   writeReg(SYSTEM_INTERRUPT_CONFIG_GPIO, 0x04);
-  Serial.println(readReg(GPIO_HV_MUX_ACTIVE_HIGH),HEX);
   writeReg(GPIO_HV_MUX_ACTIVE_HIGH, 0x01); // active low
   writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
 
