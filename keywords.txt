@@ -21,6 +21,8 @@ startContinuous	KEYWORD2
 stopContinuous	KEYWORD2
 readRangeContinuousMillimeters	KEYWORD2
 readRangeSingleMillimeters	KEYWORD2
+available	KEYWORD2
+readRangeMillimeters	KEYWORD2
 setTimeout	KEYWORD2
 getTimeout	KEYWORD2
 timeoutOccurred	KEYWORD2

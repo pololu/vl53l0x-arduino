@@ -2,6 +2,7 @@
 #define VL53L0X_h
 
 #include <Arduino.h>
+#include <Wire.h>
 
 class VL53L0X
 {
@@ -101,7 +102,7 @@ class VL53L0X
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
 
-    bool init(bool io_2v8 = true);
+    bool init(int16_t GPIO0_pin = -1, TwoWire &theWire = Wire, bool io_2v8 = true);
 
     void writeReg(uint8_t reg, uint8_t value);
     void writeReg16Bit(uint8_t reg, uint16_t value);
@@ -126,6 +127,8 @@ class VL53L0X
     void stopContinuous(void);
     uint16_t readRangeContinuousMillimeters(void);
     uint16_t readRangeSingleMillimeters(void);
+    bool available(void);
+    uint16_t readRangeMillimeters(void);
 
     inline void setTimeout(uint16_t timeout) { io_timeout = timeout; }
     inline uint16_t getTimeout(void) { return io_timeout; }
@@ -153,6 +156,8 @@ class VL53L0X
     uint16_t io_timeout;
     bool did_timeout;
     uint16_t timeout_start_ms;
+    uint16_t gpio_pin;
+    TwoWire *wire;
 
     uint8_t stop_variable; // read by init and used when starting measurement; is StopVariable field of VL53L0X_DevData_t structure in API
     uint32_t measurement_timing_budget_us;

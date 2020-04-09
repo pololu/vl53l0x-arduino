@@ -83,8 +83,11 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t getAddress(void)`<br>
   Returns the current I&sup2;C address.
 
-* `bool init(bool io_2v8 = true)`<br>
-  Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully.
+* `bool init(int16_t GPIO0_pin, TwoWire &theWire, bool io_2v8)`<br>
+  Iniitializes and configures the sensor. 
+  If the optional argument `GPIO0_pin` is set, the sensor will use that pin to check if the measurment is finished. This pin should be connected to the sensors GPOI0 pin. This can save a bit of time compared to reading the register. Default is -1.
+  The optional argument `theWire` lets you specify a diferent I2C port for communication with the sensor. Default is Wire.
+  If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully.
 
 * `void writeReg(uint8_t reg, uint8_t value)`<br>
   Writes an 8-bit sensor register with the given value.
@@ -143,10 +146,17 @@ This library is intended to provide a quicker and easier way to get started usin
   Stops continuous mode.
 
 * `uint16_t readRangeContinuousMillimeters(void)`<br>
-  Returns a range reading in millimeters when continuous mode is active.
+  Returns a range reading in millimeters when continuous mode is active. Blocks execution until the measurment is received.
 
 * `uint16_t readRangeSingleMillimeters(void)`<br>
-  Performs a single-shot ranging measurement and returns the reading in millimeters.
+  Performs a single-shot ranging measurement and returns the reading in millimeters. Blocks execution until the measurment is received.
+  
+* `uint16_t available(void)`<br>
+  Returns true if the measurment has finished and data is ready to be read. Used when reading the sensor in a non-blocking manner.
+
+* `uint16_t readRangeMillimeters(void)`<br>
+  Returns a range reading in millimeters when continuous mode is active. Should be used in combination with `available(void)` to read the sensor in a non-blocking manner.
+
 
 * `void setTimeout(uint16_t timeout)`<br>
   Sets a timeout period in milliseconds after which read operations will abort if the sensor is not ready. A value of 0 disables the timeout.
