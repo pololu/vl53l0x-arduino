@@ -74,8 +74,8 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t last_status`<br>
   The status of the last I&sup2;C write transmission. See the [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission) for return values.
 
-* `VL53L0X(void)`<br>
-  Constructor.
+* `VL53L0X(TwoWire *theWire = &Wire)`<br>
+  Constructor. Optionally for systems with mutliple Wire objects, you can choose which Wire object this object should use.
 
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).

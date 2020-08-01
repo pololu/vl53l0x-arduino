@@ -2,6 +2,7 @@
 #define VL53L0X_h
 
 #include <Arduino.h>
+#include <Wire.h>
 
 class VL53L0X
 {
@@ -96,7 +97,7 @@ class VL53L0X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL53L0X(void);
+    VL53L0X(TwoWire *theWire = &Wire);
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress(void) { return address; }
@@ -149,6 +150,7 @@ class VL53L0X
       uint32_t msrc_dss_tcc_us,    pre_range_us,    final_range_us;
     };
 
+    TwoWire *wire_ptr;
     uint8_t address;
     uint16_t io_timeout;
     bool did_timeout;
