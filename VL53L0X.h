@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+#define ST_START                0       // Initialize non-blocking reading.
+#define ST_WAIT_START           1       // Wait for the sensor to start reading.   
+#define ST_WAIT_RANGE           2       // Wait for the sensor to send the range read.
+
 class VL53L0X
 {
   public:
@@ -126,7 +130,8 @@ class VL53L0X
     void stopContinuous(void);
     uint16_t readRangeContinuousMillimeters(void);
     uint16_t readRangeSingleMillimeters(void);
-
+    bool readRangeNoBlocking(uint16_t& range);
+    
     inline void setTimeout(uint16_t timeout) { io_timeout = timeout; }
     inline uint16_t getTimeout(void) { return io_timeout; }
     bool timeoutOccurred(void);
@@ -152,6 +157,7 @@ class VL53L0X
     uint8_t address;
     uint16_t io_timeout;
     bool did_timeout;
+    uint8_t status_no_bloking;
     uint16_t timeout_start_ms;
 
     uint8_t stop_variable; // read by init and used when starting measurement; is StopVariable field of VL53L0X_DevData_t structure in API

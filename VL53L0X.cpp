@@ -38,6 +38,7 @@ VL53L0X::VL53L0X(void)
   : address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
+  , status_no_bloking(ST_START)
 {
 }
 
@@ -832,6 +833,83 @@ uint16_t VL53L0X::readRangeContinuousMillimeters(void)
   writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
 
   return range;
+}
+
+// Reads range in non-blocking, returns true when done. If the range 
+// is 65535, it indicates timeout.
+// (readRangeNoBlocking() also calls this function after starting a
+// single-shot range measurement)
+// 
+bool VL53L0X::readRangeNoBlocking(uint16_t& range)
+{
+bool read_end = false;
+
+  range = 0;
+
+  switch( status_no_bloking ) 
+  {
+    case ST_START:
+        startTimeout();
+        writeReg(0x80, 0x01);
+        writeReg(0xFF, 0x01);
+        writeReg(0x00, 0x00);
+        writeReg(0x91, stop_variable);
+        writeReg(0x00, 0x01);
+        writeReg(0xFF, 0x00);
+        writeReg(0x80, 0x00);
+
+        writeReg(SYSRANGE_START, 0x01);
+    
+        status_no_bloking = ST_WAIT_START;
+    break;
+    
+    case ST_WAIT_START:
+        // "Wait until start bit has been cleared"
+        if (readReg(SYSRANGE_START) & 0x01)
+        {
+            if (checkTimeoutExpired())
+            {
+              did_timeout = true;
+              range = 65535;
+              read_end = true;
+              status_no_bloking = ST_START;
+            }
+        }
+        else
+        {
+            startTimeout();
+            status_no_bloking = ST_WAIT_RANGE;   
+        }
+
+    case ST_WAIT_RANGE:
+        if ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
+        {
+            if (checkTimeoutExpired())
+            {
+                did_timeout = true;
+                range = 65535;
+                read_end = true;
+                status_no_bloking = ST_START;
+            }
+        }
+        else
+        {  
+          // assumptions: Linearity Corrective Gain is 1000 (default);
+          // fractional ranging is not enabled
+          range = readReg16Bit(RESULT_RANGE_STATUS + 10);
+
+          writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
+          
+          status_no_bloking = ST_START;
+          read_end = true;
+        }
+    break;
+    
+    default:
+       status_no_bloking = ST_START; 
+  }
+  
+  return read_end;
 }
 
 // Performs a single-shot range measurement and returns the reading in
