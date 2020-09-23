@@ -13,6 +13,7 @@ void setup()
 {
   Serial.begin(9600);
   Wire.begin();
+
   sensor.setTimeout(500);
   if (!sensor.init())
   {

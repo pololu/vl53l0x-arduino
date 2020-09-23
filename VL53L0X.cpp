@@ -34,8 +34,8 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL53L0X::VL53L0X(TwoWire *theWire)
-  : wire_ptr(theWire)
+VL53L0X::VL53L0X(void)
+  : i2c_bus(&Wire)
   , address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
@@ -285,32 +285,32 @@ bool VL53L0X::init(bool io_2v8)
 // Write an 8-bit register
 void VL53L0X::writeReg(uint8_t reg, uint8_t value)
 {
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  wire_ptr->write(value);
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  i2c_bus->write(value);
+  last_status = i2c_bus->endTransmission();
 }
 
 // Write a 16-bit register
 void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
 {
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  wire_ptr->write((value >> 8) & 0xFF); // value high byte
-  wire_ptr->write( value       & 0xFF); // value low byte
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  i2c_bus->write((value >> 8) & 0xFF); // value high byte
+  i2c_bus->write( value       & 0xFF); // value low byte
+  last_status = i2c_bus->endTransmission();
 }
 
 // Write a 32-bit register
 void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
 {
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  wire_ptr->write((value >> 24) & 0xFF); // value highest byte
-  wire_ptr->write((value >> 16) & 0xFF);
-  wire_ptr->write((value >>  8) & 0xFF);
-  wire_ptr->write( value        & 0xFF); // value lowest byte
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  i2c_bus->write((value >> 24) & 0xFF); // value highest byte
+  i2c_bus->write((value >> 16) & 0xFF);
+  i2c_bus->write((value >>  8) & 0xFF);
+  i2c_bus->write( value        & 0xFF); // value lowest byte
+  last_status = i2c_bus->endTransmission();
 }
 
 // Read an 8-bit register
@@ -318,12 +318,12 @@ uint8_t VL53L0X::readReg(uint8_t reg)
 {
   uint8_t value;
 
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  last_status = i2c_bus->endTransmission();
 
-  wire_ptr->requestFrom(address, (uint8_t)1);
-  value = wire_ptr->read();
+  i2c_bus->requestFrom(address, (uint8_t)1);
+  value = i2c_bus->read();
 
   return value;
 }
@@ -333,13 +333,13 @@ uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 {
   uint16_t value;
 
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  last_status = i2c_bus->endTransmission();
 
-  wire_ptr->requestFrom(address, (uint8_t)2);
-  value  = (uint16_t)wire_ptr->read() << 8; // value high byte
-  value |=           wire_ptr->read();      // value low byte
+  i2c_bus->requestFrom(address, (uint8_t)2);
+  value  = (uint16_t)i2c_bus->read() << 8; // value high byte
+  value |=           i2c_bus->read();      // value low byte
 
   return value;
 }
@@ -349,15 +349,15 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 {
   uint32_t value;
 
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  last_status = i2c_bus->endTransmission();
 
-  wire_ptr->requestFrom(address, (uint8_t)4);
-  value  = (uint32_t)wire_ptr->read() << 24; // value highest byte
-  value |= (uint32_t)wire_ptr->read() << 16;
-  value |= (uint16_t)wire_ptr->read() <<  8;
-  value |=           wire_ptr->read();       // value lowest byte
+  i2c_bus->requestFrom(address, (uint8_t)4);
+  value  = (uint32_t)i2c_bus->read() << 24; // value highest byte
+  value |= (uint32_t)i2c_bus->read() << 16;
+  value |= (uint16_t)i2c_bus->read() <<  8;
+  value |=           i2c_bus->read();       // value lowest byte
 
   return value;
 }
@@ -366,30 +366,30 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 // starting at the given register
 void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
 {
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
 
   while (count-- > 0)
   {
-    wire_ptr->write(*(src++));
+    i2c_bus->write(*(src++));
   }
 
-  last_status = wire_ptr->endTransmission();
+  last_status = i2c_bus->endTransmission();
 }
 
 // Read an arbitrary number of bytes from the sensor, starting at the given
 // register, into the given array
 void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 {
-  wire_ptr->beginTransmission(address);
-  wire_ptr->write(reg);
-  last_status = wire_ptr->endTransmission();
+  i2c_bus->beginTransmission(address);
+  i2c_bus->write(reg);
+  last_status = i2c_bus->endTransmission();
 
-  wire_ptr->requestFrom(address, count);
+  i2c_bus->requestFrom(address, count);
 
   while (count-- > 0)
   {
-    *(dst++) = wire_ptr->read();
+    *(dst++) = i2c_bus->read();
   }
 }
 
