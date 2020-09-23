@@ -78,19 +78,16 @@ This library is intended to provide a quicker and easier way to get started usin
   Constructor.
 
 * `void setI2cBus(TwoWire * bus)`<br>
-  Changes the I&sup2;C bus the VL53L0X is assigned to. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL53L0X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setI2cBus(&Wire1);`.
+  Configures this object to use the specified I&sup2;C bus. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL53L0X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setI2cBus(&Wire1);`.
 
 * `TwoWire * getI2cBus()`<br>
-  Returns a pointer to the VL53L0X's currently assigned I&sup2;C bus.
-
-* `uint8_t getAddress(void)`<br>
-  Returns the current I&sup2;C address.
+  Returns a pointer to the I&sup2;C bus this object is using.
 
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
 
 * `uint8_t getAddress(void)`<br>
-  Returns the current I&sup2;C address.
+  Returns the I&sup2;C address this object is using.
 
 * `bool init(bool io_2v8 = true)`<br>
   Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully.
@@ -168,7 +165,7 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
-* 1.3.0 (2020 Sep 22): Added support for alternate I&sup2;C buses (thanks KurtE).
+* 1.3.0 (2020 Sep 23): Added support for alternative I&sup2;C buses (thanks KurtE).
 * 1.2.0 (2019 Oct 31): Incorporated some updates from ST's VL53L0X API version 1.0.2 (this library was originally based on API version 1.0.0).
 * 1.1.0 (2019 Oct 29): Improved `init()` and added a check for its return value in examples; fixed a few other issues.
 * 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
