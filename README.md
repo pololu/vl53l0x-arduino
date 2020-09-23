@@ -1,7 +1,7 @@
 # VL53L0X library for Arduino
 
-Version: 1.2.0<br>
-Release date: 2019 Oct 31<br>
+Version: 1.3.0<br>
+Release date: 2020 Sep 23<br>
 [![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -74,8 +74,17 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t last_status`<br>
   The status of the last I&sup2;C write transmission. See the [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission) for return values.
 
-* `VL53L0X(TwoWire *theWire = &Wire)`<br>
-  Constructor. Optionally for systems with mutliple Wire objects, you can choose which Wire object this object should use.
+* `VL53L0X(void)`<br>
+  Constructor.
+
+* `void setI2cBus(TwoWire * bus)`<br>
+  Changes the I&sup2;C bus the VL53L0X is assigned to. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL53L0X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setI2cBus(&Wire1);`.
+
+* `TwoWire * getI2cBus()`<br>
+  Returns a pointer to the VL53L0X's currently assigned I&sup2;C bus.
+
+* `uint8_t getAddress(void)`<br>
+  Returns the current I&sup2;C address.
 
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
@@ -159,6 +168,7 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
+* 1.3.0 (2020 Sep 22): Added support for alternate I&sup2;C buses (thanks KurtE).
 * 1.2.0 (2019 Oct 31): Incorporated some updates from ST's VL53L0X API version 1.0.2 (this library was originally based on API version 1.0.0).
 * 1.1.0 (2019 Oct 29): Improved `init()` and added a check for its return value in examples; fixed a few other issues.
 * 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
