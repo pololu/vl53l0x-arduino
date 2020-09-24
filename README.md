@@ -77,10 +77,10 @@ This library is intended to provide a quicker and easier way to get started usin
 * `VL53L0X()`<br>
   Constructor.
 
-* `void setI2cBus(TwoWire * bus)`<br>
-  Configures this object to use the specified I&sup2;C bus. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL53L0X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setI2cBus(&Wire1);`.
+* `void setBus(TwoWire * bus)`<br>
+  Configures this object to use the specified I&sup2;C bus. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL53L0X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setBus(&Wire1);`.
 
-* `TwoWire * getI2cBus()`<br>
+* `TwoWire * getBus()`<br>
   Returns a pointer to the I&sup2;C bus this object is using.
 
 * `void setAddress(uint8_t new_addr)`<br>

@@ -99,8 +99,8 @@ class VL53L0X
 
     VL53L0X();
 
-    void setI2cBus(TwoWire * bus) { i2c_bus = bus; }
-    TwoWire * getI2cBus() { return i2c_bus; }
+    void setBus(TwoWire * bus) { this->bus = bus; }
+    TwoWire * getBus() { return bus; }
 
     void setAddress(uint8_t new_addr);
     inline uint8_t getAddress() { return address; }
@@ -153,7 +153,7 @@ class VL53L0X
       uint32_t msrc_dss_tcc_us,    pre_range_us,    final_range_us;
     };
 
-    TwoWire * i2c_bus;
+    TwoWire * bus;
     uint8_t address;
     uint16_t io_timeout;
     bool did_timeout;
