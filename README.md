@@ -1,7 +1,7 @@
 # VL53L0X library for Arduino
 
 Version: 1.3.0<br>
-Release date: 2020 Sep 23<br>
+Release date: 2020 Sep 24<br>
 [![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -165,7 +165,7 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
-* 1.3.0 (2020 Sep 23): Added support for alternative I&sup2;C buses (thanks KurtE).
+* 1.3.0 (2020 Sep 24): Added support for alternative I&sup2;C buses (thanks KurtE).
 * 1.2.0 (2019 Oct 31): Incorporated some updates from ST's VL53L0X API version 1.0.2 (this library was originally based on API version 1.0.0).
 * 1.1.0 (2019 Oct 29): Improved `init()` and added a check for its return value in examples; fixed a few other issues.
 * 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
