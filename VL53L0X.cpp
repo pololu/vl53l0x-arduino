@@ -34,7 +34,7 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL53L0X::VL53L0X(void)
+VL53L0X::VL53L0X()
   : i2c_bus(&Wire)
   , address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
@@ -411,7 +411,7 @@ bool VL53L0X::setSignalRateLimit(float limit_Mcps)
 }
 
 // Get the return signal rate limit check value in MCPS
-float VL53L0X::getSignalRateLimit(void)
+float VL53L0X::getSignalRateLimit()
 {
   return (float)readReg16Bit(FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT) / (1 << 7);
 }
@@ -512,7 +512,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
 // Get the measurement timing budget in microseconds
 // based on VL53L0X_get_measurement_timing_budget_micro_seconds()
 // in us
-uint32_t VL53L0X::getMeasurementTimingBudget(void)
+uint32_t VL53L0X::getMeasurementTimingBudget()
 {
   SequenceStepEnables enables;
   SequenceStepTimeouts timeouts;
@@ -800,7 +800,7 @@ void VL53L0X::startContinuous(uint32_t period_ms)
 
 // Stop continuous measurements
 // based on VL53L0X_StopMeasurement()
-void VL53L0X::stopContinuous(void)
+void VL53L0X::stopContinuous()
 {
   writeReg(SYSRANGE_START, 0x01); // VL53L0X_REG_SYSRANGE_MODE_SINGLESHOT
 
@@ -814,7 +814,7 @@ void VL53L0X::stopContinuous(void)
 // Returns a range reading in millimeters when continuous mode is active
 // (readRangeSingleMillimeters() also calls this function after starting a
 // single-shot range measurement)
-uint16_t VL53L0X::readRangeContinuousMillimeters(void)
+uint16_t VL53L0X::readRangeContinuousMillimeters()
 {
   startTimeout();
   while ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
@@ -838,7 +838,7 @@ uint16_t VL53L0X::readRangeContinuousMillimeters(void)
 // Performs a single-shot range measurement and returns the reading in
 // millimeters
 // based on VL53L0X_PerformSingleRangingMeasurement()
-uint16_t VL53L0X::readRangeSingleMillimeters(void)
+uint16_t VL53L0X::readRangeSingleMillimeters()
 {
   writeReg(0x80, 0x01);
   writeReg(0xFF, 0x01);

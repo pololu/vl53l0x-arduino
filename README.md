@@ -74,7 +74,7 @@ This library is intended to provide a quicker and easier way to get started usin
 * `uint8_t last_status`<br>
   The status of the last I&sup2;C write transmission. See the [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission) for return values.
 
-* `VL53L0X(void)`<br>
+* `VL53L0X()`<br>
   Constructor.
 
 * `void setI2cBus(TwoWire * bus)`<br>
@@ -86,7 +86,7 @@ This library is intended to provide a quicker and easier way to get started usin
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
 
-* `uint8_t getAddress(void)`<br>
+* `uint8_t getAddress()`<br>
   Returns the I&sup2;C address this object is using.
 
 * `bool init(bool io_2v8 = true)`<br>
@@ -122,13 +122,13 @@ This library is intended to provide a quicker and easier way to get started usin
 * `bool setSignalRateLimit(float limit_Mcps)`<br>
   Sets the return signal rate limit to the given value in units of MCPS (mega counts per second). This is the minimum amplitude of the signal reflected from the target and received by the sensor necessary for it to report a valid reading. Setting a lower limit increases the potential range of the sensor but also increases the likelihood of getting an inaccurate reading because of reflections from objects other than the intended target. This limit is initialized to 0.25 MCPS by default. The return value is a boolean indicating whether the requested limit was valid.
 
-* `float getSignalRateLimit(void)`<br>
+* `float getSignalRateLimit()`<br>
   Returns the current return signal rate limit in MCPS.
 
 * `bool setMeasurementTimingBudget(uint32_t budget_us)`<br>
   Sets the measurement timing budget to the given value in microseconds. This is the time allowed for one range measurement; a longer timing budget allows for more accurate measurements. The default budget is about 33000 microseconds, or 33 ms; the minimum is 20 ms. The return value is a boolean indicating whether the requested budget was valid.
 
-* `uint32_t getMeasurementTimingBudget(void)`<br>
+* `uint32_t getMeasurementTimingBudget()`<br>
   Returns the current measurement timing budget in microseconds.
 
 * `bool setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks)`
@@ -145,22 +145,22 @@ This library is intended to provide a quicker and easier way to get started usin
 * `void startContinuous(uint32_t period_ms = 0)`<br>
   Starts continuous ranging measurements. If the optional argument `period_ms` is 0 (the default if not specified), continuous back-to-back mode is used (the sensor takes measurements as often as possible); if it is nonzero, continuous timed mode is used, with the specified inter-measurement period in milliseconds determining how often the sensor takes a measurement.
 
-* `void stopContinuous(void)`<br>
+* `void stopContinuous()`<br>
   Stops continuous mode.
 
-* `uint16_t readRangeContinuousMillimeters(void)`<br>
+* `uint16_t readRangeContinuousMillimeters()`<br>
   Returns a range reading in millimeters when continuous mode is active.
 
-* `uint16_t readRangeSingleMillimeters(void)`<br>
+* `uint16_t readRangeSingleMillimeters()`<br>
   Performs a single-shot ranging measurement and returns the reading in millimeters.
 
 * `void setTimeout(uint16_t timeout)`<br>
   Sets a timeout period in milliseconds after which read operations will abort if the sensor is not ready. A value of 0 disables the timeout.
 
-* `uint16_t getTimeout(void)`<br>
+* `uint16_t getTimeout()`<br>
   Returns the current timeout period setting.
 
-* `bool timeoutOccurred(void)`<br>
+* `bool timeoutOccurred()`<br>
   Indicates whether a read timeout has occurred since the last call to `timeoutOccurred()`.
 
 ## Version history
