@@ -30,7 +30,7 @@
 // Calculate macro period in *nanoseconds* from VCSEL period in PCLKs
 // based on VL53L0X_calc_macro_period_ps()
 // PLL_period_ps = 1655; macro_period_vclks = 2304
-#define calcMacroPeriod(vcsel_period_pclks) ((((uint32_t)2304 * (vcsel_period_pclks) * 1655) + 500) / 1000)
+#define calcMacroPeriod(vcsel_period_pclks) ((((uint32_t)2304 * (vcsel_period_pclks) * 1655) + 500) / 100)
 
 // Constructors ////////////////////////////////////////////////////////////////
 
@@ -1006,7 +1006,7 @@ uint32_t VL53L0X::timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint
 {
   uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
 
-  return ((timeout_period_mclks * macro_period_ns) + 500) / 1000;
+  return ((timeout_period_mclks * macro_period_ns) + (macro_period_ns / 2)) / 1000;
 }
 
 // Convert sequence step timeout from microseconds to MCLKs with given VCSEL period in PCLKs
