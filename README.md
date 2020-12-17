@@ -2,7 +2,6 @@
 
 Version: 1.3.0<br>
 Release date: 2020 Sep 24<br>
-[![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
 ## Summary

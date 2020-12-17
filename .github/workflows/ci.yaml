@@ -1,0 +1,19 @@
+name: "CI"
+on:
+  pull_request:
+  push:
+jobs:
+  ci:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout this repository
+      uses: actions/checkout@v2.3.4
+    - name: Cache for arduino-ci
+      uses: actions/cache@v2.1.3
+      with:
+        path: |
+          ~/.arduino15
+        key: ${{ runner.os }}-arduino
+    - name: Install nix
+      uses: cachix/install-nix-action@v12
+    - run: nix-shell -I nixpkgs=channel:nixpkgs-unstable -p arduino-ci --run "arduino-ci"
