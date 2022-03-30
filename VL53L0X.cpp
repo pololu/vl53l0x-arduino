@@ -296,8 +296,8 @@ void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
 {
   bus->beginTransmission(address);
   bus->write(reg);
-  bus->write((value >> 8) & 0xFF); // value high byte
-  bus->write( value       & 0xFF); // value low byte
+  bus->write((uint8_t)(value >> 8)); // value high byte
+  bus->write((uint8_t)(value)); // value low byte
   last_status = bus->endTransmission();
 }
 
@@ -306,10 +306,10 @@ void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
 {
   bus->beginTransmission(address);
   bus->write(reg);
-  bus->write((value >> 24) & 0xFF); // value highest byte
-  bus->write((value >> 16) & 0xFF);
-  bus->write((value >>  8) & 0xFF);
-  bus->write( value        & 0xFF); // value lowest byte
+  bus->write((uint8_t)(value >> 24)); // value highest byte
+  bus->write((uint8_t)(value >> 16));
+  bus->write((uint8_t)(value >>  8));
+  bus->write((uint8_t)(value));       // value lowest byte
   last_status = bus->endTransmission();
 }
 
