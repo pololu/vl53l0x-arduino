@@ -39,6 +39,7 @@ VL53L0X::VL53L0X()
   , address(ADDRESS_DEFAULT)
   , io_timeout(0) // no timeout
   , did_timeout(false)
+  , wire_error(0)
 {
 }
 
@@ -289,6 +290,7 @@ void VL53L0X::writeReg(uint8_t reg, uint8_t value)
   bus->write(reg);
   bus->write(value);
   last_status = bus->endTransmission();
+  setWireErrorBit();
 }
 
 // Write a 16-bit register
@@ -299,6 +301,7 @@ void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
   bus->write((uint8_t)(value >> 8)); // value high byte
   bus->write((uint8_t)(value)); // value low byte
   last_status = bus->endTransmission();
+  setWireErrorBit();
 }
 
 // Write a 32-bit register
@@ -311,6 +314,7 @@ void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
   bus->write((uint8_t)(value >>  8));
   bus->write((uint8_t)(value));       // value lowest byte
   last_status = bus->endTransmission();
+  setWireErrorBit();
 }
 
 // Read an 8-bit register
@@ -321,6 +325,7 @@ uint8_t VL53L0X::readReg(uint8_t reg)
   bus->beginTransmission(address);
   bus->write(reg);
   last_status = bus->endTransmission();
+  setWireErrorBit();
 
   bus->requestFrom(address, (uint8_t)1);
   value = bus->read();
@@ -336,6 +341,7 @@ uint16_t VL53L0X::readReg16Bit(uint8_t reg)
   bus->beginTransmission(address);
   bus->write(reg);
   last_status = bus->endTransmission();
+  setWireErrorBit();
 
   bus->requestFrom(address, (uint8_t)2);
   value  = (uint16_t)bus->read() << 8; // value high byte
@@ -352,6 +358,7 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
   bus->beginTransmission(address);
   bus->write(reg);
   last_status = bus->endTransmission();
+  setWireErrorBit();
 
   bus->requestFrom(address, (uint8_t)4);
   value  = (uint32_t)bus->read() << 24; // value highest byte
@@ -375,6 +382,7 @@ void VL53L0X::writeMulti(uint8_t reg, uint8_t const * src, uint8_t count)
   }
 
   last_status = bus->endTransmission();
+  setWireErrorBit();
 }
 
 // Read an arbitrary number of bytes from the sensor, starting at the given
@@ -384,6 +392,7 @@ void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
   bus->beginTransmission(address);
   bus->write(reg);
   last_status = bus->endTransmission();
+  setWireErrorBit();
 
   bus->requestFrom(address, count);
 
@@ -866,6 +875,15 @@ bool VL53L0X::timeoutOccurred()
 {
   bool tmp = did_timeout;
   did_timeout = false;
+  return tmp;
+}
+
+// Did I2C transmission error occur in one of the read/write functions since
+// the last call to getWireErrorBits()?
+uint8_t VL53L0X::getWireErrorBits()
+{
+  const uint8_t tmp = wire_error;
+  wire_error = 0;
   return tmp;
 }
 

@@ -159,6 +159,9 @@ This library is intended to provide a quicker and easier way to get started usin
 * `bool timeoutOccurred()`<br>
   Indicates whether a read timeout has occurred since the last call to `timeoutOccurred()`.
 
+* `uint8_t getWireErrorBits(void)`<br>
+  Indicates what I&sup2;C transmission errors have occurred since the last call to VL53L0X API. Returns 0 if `last_status` was success, but returns value whose bit is set corresponding to error status written on [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission).
+
 ## Version history
 
 * 1.3.1 (2022-04-05): Explicitly cast `Wire.write()` arguments to `uint8_t`. Removed 20ms hard limit for timing budget to match API 1.0.4.
